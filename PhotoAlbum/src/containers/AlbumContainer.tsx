@@ -9,16 +9,13 @@ import {
 import { List } from "react-native-paper";
 import { Album, Photo } from "../types";
 import { connect, DispatchProp } from "react-redux";
-import {
-  openAlbum,
-  NavActionState
-} from "../reducers/navActions";
+import { openAlbum, ActionState } from '../reducers/actions';
 
 interface AlbumProps extends DispatchProp<any> {
-  albums: Album[];
-  photos: Photo[];
   album: Album | undefined;
   photo: Photo | undefined;
+  photos: Photo[];
+  albums: Album[];
 }
 
 class AlbumContainer extends React.Component<AlbumProps> {
@@ -29,10 +26,11 @@ class AlbumContainer extends React.Component<AlbumProps> {
     console.log("props", props);
   }
   public render() {
-    console.log(this.props);
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Select Album</Text>
+        <Text style={styles.welcome}>
+          {this.props.album ? "Select image" : "Select Album"}
+        </Text>
         {(!this.props.album && (
           <FlatList
             style={styles.list}
@@ -52,7 +50,7 @@ class AlbumContainer extends React.Component<AlbumProps> {
                 return item.id.toString();
               }}
             />
-          )) || <Text>No albums, no photos, only bums </Text>}
+          ))}
       </View>
     );
   }
@@ -79,7 +77,7 @@ class AlbumContainer extends React.Component<AlbumProps> {
     return (
       <List.Item
         /* onPress={this.goToPhoto(info.item)} */
-        left={props => <List.Icon {...props} icon="folder" />}
+        left={props => <List.Icon {...props} icon="photo" />}
         title={`${info.item.id}. ${info.item.title}`}
         style={styles.listItem}
       />
@@ -114,12 +112,13 @@ const styles = StyleSheet.create({
     marginBottom: 5
   }
 });
-const mapStateToProps = (state: NavActionState) => {
+const mapStateToProps = (state: ActionState, ownProps: AlbumProps) => {
   return {
     album: state.album,
     photo: state.photo,
-
+    albums: state.albums,
+    photos: state.photos
   };
 };
 
-export default connect<any>(mapStateToProps as any)(AlbumContainer);
+export default connect<Partial<ActionState>>(mapStateToProps as any)(AlbumContainer as any);
