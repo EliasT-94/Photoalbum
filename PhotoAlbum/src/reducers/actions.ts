@@ -7,15 +7,15 @@ export interface ActionState {
   readonly albums: Album[];
 }
 export enum ActionType {
-  NAVIGATE_TO_PHOTO = "NAVIGATE_TO_PHOTO",
+  OPEN_PHOTO = "OPEN_PHOTO",
   OPEN_ALBUM = "OPEN_ALBUM",
   GET_PHOTOS = "GET_PHOTOS",
   GET_ALBUMS = "GET_ALBUMS"
 }
 export type Action =
   | {
-      type: "NAVIGATE_TO_PHOTO";
-      payload: Photo;
+      type: "OPEN_PHOTO";
+      payload: Photo | undefined;
     }
   | {
       type: "OPEN_ALBUM";
@@ -30,9 +30,9 @@ export type Action =
       payload: Album[];
     };
 
-export const navigateToPhoto = (photo: Photo): Action => {
+export const openPhoto = (photo: Photo | undefined): Action => {
   return {
-    type: "NAVIGATE_TO_PHOTO",
+    type: "OPEN_PHOTO",
     payload: photo
   };
 };
