@@ -58,7 +58,7 @@ class RootContainer extends React.Component<RootProps, any> {
       <View style={styles.container}>
         <Appbar style={styles.appbar}>
           {(this.props.album && (
-            <Appbar.Action icon={"arrow-back"} onPress={this.handleGoBack} />
+            <Appbar.BackAction onPress={this.handleGoBack} />
           )) || <Appbar.Action icon={"perm-media"} />}
           <Appbar.Header style={styles.appbar}>
             <Text style={styles.header}>The Great Album Application</Text>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#262626",
-    paddingBottom: 100
+    paddingBottom: 20
   },
   appbar: {
     backgroundColor: "#050505"
