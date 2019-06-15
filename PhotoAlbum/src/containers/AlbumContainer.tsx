@@ -22,22 +22,40 @@ class AlbumContainer extends React.Component<AlbumProps> {
   public render() {
     if (!this.props.album) {
       return (
-        <AlbumList albums={this.props.albums} dispatch={this.props.dispatch} />
+        <>
+          <Text style={styles.header}>Albums</Text>
+          <AlbumList
+            albums={this.props.albums}
+            dispatch={this.props.dispatch}
+          />
+        </>
       );
     } else if (this.props.album && !this.props.photo) {
       return (
-        <PhotoList
-          photos={this.props.photos}
-          album={this.props.album}
-          dispatch={this.props.dispatch}
-        />
+        <>
+          <Text style={styles.header}>{this.props.album.title}</Text>
+
+          <PhotoList
+            photos={this.props.photos}
+            album={this.props.album}
+            dispatch={this.props.dispatch}
+          />
+        </>
       );
     } else if (this.props.photo) {
       return <PhotoComponent photo={this.props.photo} />;
     }
   }
 }
-
+const styles = StyleSheet.create({
+  header: {
+    fontFamily: "BebasNeue-Regular",
+    color: "white",
+    fontSize: 16,
+    textAlign: "center",
+    margin: 10
+  }
+});
 const mapStateToProps = (state: ActionState, ownProps: AlbumProps) => {
   return {
     album: state.album,

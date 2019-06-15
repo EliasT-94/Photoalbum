@@ -79,7 +79,7 @@ export default class PhotoList extends React.Component<PhotoProps, PhotoState> {
         onPress={this.goToPhoto(info.item)}
       >
         <Image
-          style={styles.imageThumbnail}
+          style={[styles.imageThumbnail, setListBackground(info.item.id)]}
           source={{ uri: info.item.thumbnailUrl }}
         />
         <Text style={styles.descText}>{info.item.title}</Text>
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
     margin: 8
   },
   descText: {
+    fontFamily: "BebasNeue-Book",
     color: "white",
     textAlign: "center",
     padding: 4
   },
   imageThumbnail: {
-    borderWidth: 5,
-    borderRadius: 3,
+    borderWidth: 3,
     borderColor: "#a6a9ad",
     alignSelf: "center",
     width: 175,

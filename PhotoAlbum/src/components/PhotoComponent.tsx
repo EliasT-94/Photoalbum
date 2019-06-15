@@ -45,12 +45,14 @@ export default class PhotoComponent extends React.Component<
 }
 const styles = StyleSheet.create({
   photoTitle: {
+    fontFamily: "BebasNeue-Book",
     fontSize: 15,
     textAlign: "center",
     color: "white",
     lineHeight: 50
   },
   photoTitleContainer: {
+
     width: "100%"
   },
   fullPhoto: {
