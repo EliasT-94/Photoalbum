@@ -4,12 +4,14 @@ import {
   ListRenderItemInfo,
   StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  TouchableOpacity
 } from "react-native";
 import { List } from "react-native-paper";
 import { Album, Photo } from "../types";
 import { connect, DispatchProp } from "react-redux";
-import { openAlbum, ActionState } from '../reducers/actions';
+import { openAlbum, ActionState, openPhoto } from "../reducers/actions";
 
 interface AlbumProps extends DispatchProp<any> {
   album: Album | undefined;
@@ -27,13 +29,15 @@ class AlbumContainer extends React.Component<AlbumProps> {
   }
   public render() {
     return (
-      <View style={styles.container}>
+      <View>
         <Text style={styles.welcome}>
-          {this.props.album ? "Select image" : "Select Album"}
+          {this.props.album ? this.props.album.title : "Select Album"}
         </Text>
         {(!this.props.album && (
           <FlatList
-            style={styles.list}
+            key="albums"
+            numColumns={1}
+            style={styles.albumList}
             renderItem={this.renderAlbumItem}
             data={this.props.albums}
             keyExtractor={item => {
@@ -41,26 +45,45 @@ class AlbumContainer extends React.Component<AlbumProps> {
             }}
           />
         )) ||
-          (this.props.album && (
+          (this.props.album && !this.props.photo && (
             <FlatList
-              style={styles.list}
+              key="photos"
+              numColumns={2}
+              style={styles.photoList}
               renderItem={this.renderPhotoItem}
               data={this.getPhotosFromAlbum(this.props.album.id)}
               keyExtractor={item => {
                 return item.id.toString();
               }}
             />
+          )) ||
+          (this.props.photo && (
+            <View
+              style={{ flex: 1, flexDirection: "column", alignItems: "center" }}
+            >
+              <Image
+                source={{ uri: this.props.photo.url }}
+                style={{ width: 300, height: 300 }}
+              />
+              <Text style={{ fontSize: 20, width: 300, textAlign:'center' }}>
+                {this.props.photo.title}
+              </Text>
+            </View>
           ))}
       </View>
     );
   }
   private getPhotosFromAlbum = (albumId: number) => {
-    console.log(albumId);
     const photos = this.props.photos.filter(photo => photo.albumId === albumId);
     return photos;
   };
+
   private goToAlbum = (album: Album) => () => {
     this.props.dispatch(openAlbum(album));
+  };
+
+  private navigateToPhoto = (photo: Photo) => () => {
+    this.props.dispatch(openPhoto(photo));
   };
 
   private renderAlbumItem = (info: ListRenderItemInfo<Album>) => {
@@ -75,12 +98,18 @@ class AlbumContainer extends React.Component<AlbumProps> {
   };
   private renderPhotoItem = (info: ListRenderItemInfo<Photo>) => {
     return (
-      <List.Item
-        /* onPress={this.goToPhoto(info.item)} */
-        left={props => <List.Icon {...props} icon="photo" />}
-        title={`${info.item.id}. ${info.item.title}`}
-        style={styles.listItem}
-      />
+      <TouchableOpacity
+        style={styles.photoItem}
+        onPress={this.navigateToPhoto(info.item)}
+      >
+        <Image
+          style={styles.imageThumbnail}
+          source={{ uri: info.item.thumbnailUrl }}
+        />
+        <Text style={styles.descText}>{`${info.item.id}. ${
+          info.item.title
+        }`}</Text>
+      </TouchableOpacity>
     );
   };
 }
@@ -88,28 +117,40 @@ class AlbumContainer extends React.Component<AlbumProps> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "#e5e5e5"
   },
-  list: {
+  albumList: {
     margin: 20
   },
+  photoList: {
+    margin: 20
+  },
+  photoItem: {
+    flex: 1,
+    flexDirection: "column",
+    margin: 8
+  },
+  descText: {
+    textAlign: "center",
+    padding: 4
+  },
   listItem: {
-    width: "100%",
     borderWidth: 1,
     borderRadius: 5,
-    marginTop: 5,
-    textAlign: "center"
+    marginTop: 5
+  },
+  imageThumbnail: {
+    borderWidth: 5,
+    borderRadius: 3,
+    borderColor: "#a6a9ad",
+    alignSelf: "center",
+    width: 150,
+    height: 150
   },
   welcome: {
     fontSize: 20,
     textAlign: "center",
     margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
   }
 });
 const mapStateToProps = (state: ActionState, ownProps: AlbumProps) => {
@@ -121,4 +162,6 @@ const mapStateToProps = (state: ActionState, ownProps: AlbumProps) => {
   };
 };
 
-export default connect<Partial<ActionState>>(mapStateToProps as any)(AlbumContainer as any);
+export default connect<Partial<ActionState>>(mapStateToProps as any)(
+  AlbumContainer as any
+);

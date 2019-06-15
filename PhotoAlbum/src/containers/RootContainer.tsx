@@ -3,7 +3,12 @@ import { StyleSheet, View, Text } from "react-native";
 import { connect, DispatchProp } from "react-redux";
 import AlbumContainer from "./AlbumContainer";
 import { Album, Photo } from "../types";
-import { getAlbums, getPhotos, openAlbum } from "../reducers/actions";
+import {
+  getAlbums,
+  getPhotos,
+  openAlbum,
+  openPhoto
+} from "../reducers/actions";
 import { ActionState } from "../reducers/actions";
 import { Appbar } from "react-native-paper";
 
@@ -14,7 +19,7 @@ interface RootProps extends DispatchProp<any> {
   photo: Photo;
 }
 
-class RootComponent extends React.Component<RootProps, any> {
+class RootContainer extends React.Component<RootProps, any> {
   constructor(props: RootProps) {
     super(props);
     this.state = {
@@ -25,11 +30,9 @@ class RootComponent extends React.Component<RootProps, any> {
 
   public componentDidMount() {
     if (!this.props.albums || !this.props.albums.length) {
-      console.log("No albums, fetching...");
       fetch("https://jsonplaceholder.typicode.com/albums")
         .then(response => response.json())
         .then((albums: Album[]) => {
-          console.log("ALBUMS FOUND!!", albums);
           this.props.dispatch(getAlbums(albums)) && this.setState({ albums });
         })
         .catch(error => {
@@ -53,27 +56,32 @@ class RootComponent extends React.Component<RootProps, any> {
       <View style={styles.container}>
         <Appbar>
           {this.props.album && (
-            <Appbar.Action
-              icon={"arrow-back"}
-              onPress={() => this.props.dispatch(openAlbum(undefined))}
-            />
+            <Appbar.Action icon={"arrow-back"} onPress={this.handleGoBack} />
           )}
           <Appbar.Header>
-            <Text style={styles.welcome}>Mighty Album Application</Text>
+            <Text style={styles.welcome}>The Great Album Application</Text>
           </Appbar.Header>
         </Appbar>
-
         <AlbumContainer />
       </View>
     );
   }
+  private handleGoBack = () => {
+    console.log(this.props)
+    if (this.props.album && !this.props.photo) {
+      this.props.dispatch(openAlbum(undefined));
+    }
+    if (this.props.photo) {
+      this.props.dispatch(openPhoto(undefined));
+    }
+  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "#F5FCFF",
+    paddingBottom: 100
   },
   list: {
     margin: 20
@@ -90,11 +98,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
   }
 });
 const mapStateToProps = (state: ActionState) => {
@@ -106,5 +109,5 @@ const mapStateToProps = (state: ActionState) => {
   };
 };
 export default connect<ActionState>(mapStateToProps as any)(
-  RootComponent as any
+  RootContainer as any
 );

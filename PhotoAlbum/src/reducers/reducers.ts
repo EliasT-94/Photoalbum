@@ -16,13 +16,12 @@ import {
     action: Action
   ) {
     switch (action.type) {
-      case ActionType.NAVIGATE_TO_PHOTO:
+      case ActionType.OPEN_PHOTO:
         return {
           ...state,
           photo: action.payload
         };
         case ActionType.OPEN_ALBUM:
-        console.log(action.payload)
         return {
           ...state,
           album: action.payload
