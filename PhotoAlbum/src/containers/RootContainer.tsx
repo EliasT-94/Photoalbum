@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#050505"
   },
   header: {
+    fontFamily: "BebasNeue-Regular",
     color: "white",
     fontSize: 20,
     textAlign: "center",

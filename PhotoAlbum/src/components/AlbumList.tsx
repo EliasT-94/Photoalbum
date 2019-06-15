@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  FlatList,
-  ListRenderItemInfo,
-  StyleSheet,
-} from "react-native";
+import { FlatList, ListRenderItemInfo, StyleSheet, Text } from "react-native";
 import { Album } from "../types";
 import { List } from "react-native-paper";
 import { setListBackground } from "./functions";
@@ -20,17 +16,16 @@ export default class AlbumList extends React.Component<AlbumProps> {
   }
   public render() {
     return (
-
-        <FlatList
-          key="albums"
-          numColumns={2}
-          style={styles.albumList}
-          renderItem={this.renderAlbumItem}
-          data={this.props.albums}
-          keyExtractor={item => {
-            return item.id.toString();
-          }}
-        />
+      <FlatList
+        key="albums"
+        numColumns={2}
+        style={styles.albumList}
+        renderItem={this.renderAlbumItem}
+        data={this.props.albums}
+        keyExtractor={item => {
+          return item.id.toString();
+        }}
+      />
     );
   }
 
@@ -49,11 +44,8 @@ export default class AlbumList extends React.Component<AlbumProps> {
             style={{ marginLeft: -8, marginRight: -8 }}
           />
         )}
-        title={info.item.title}
-        style={[
-          styles.listItem,
-          { backgroundColor: setListBackground(info.item.id) }
-        ]}
+        title={<Text style={styles.listItemText}>{info.item.title}</Text>}
+        style={[styles.listItem, setListBackground(info.item.id)]}
       />
     );
   };
@@ -68,11 +60,12 @@ export default class AlbumList extends React.Component<AlbumProps> {
 const styles = StyleSheet.create({
   listItem: {
     width: "45%",
-    backgroundColor: "#bfe5ae",
     borderWidth: 1,
-    borderRadius: 5,
     borderColor: "#a6a9ad",
     margin: 8
+  },
+  listItemText: {
+    fontFamily: "BebasNeue-Book"
   },
   albumList: {
     margin: 20
