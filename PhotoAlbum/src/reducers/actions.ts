@@ -50,10 +50,9 @@ export const getPhotos = (photos: Photo[]): Action => {
     payload: photos
   };
 };
-export const getAlbums = (album: Album[]): Action => {
-  console.log(album);
+export const getAlbums = (albums: Album[]): Action => {
   return {
     type: "GET_ALBUMS",
-    payload: album
+    payload: albums
   };
 };

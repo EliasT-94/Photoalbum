@@ -29,7 +29,9 @@ class RootContainer extends React.Component<RootProps, any> {
   }
 
   public componentDidMount() {
+    console.log(this.props)
     if (!this.props.albums || !this.props.albums.length) {
+      console.log('NO AL BUMS')
       fetch("https://jsonplaceholder.typicode.com/albums")
         .then(response => response.json())
         .then((albums: Album[]) => {
