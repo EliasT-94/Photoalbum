@@ -54,20 +54,24 @@ class RootContainer extends React.Component<RootProps, any> {
   public render() {
     return (
       <View style={styles.container}>
-        <Appbar>
-          {this.props.album && (
+        <Appbar style={styles.appbar}>
+          {(this.props.album && (
             <Appbar.Action icon={"arrow-back"} onPress={this.handleGoBack} />
-          )}
-          <Appbar.Header>
-            <Text style={styles.welcome}>The Great Album Application</Text>
+          )) || <Appbar.Action icon={"perm-media"} />}
+          <Appbar.Header style={styles.appbar}>
+            <Text style={styles.header}>The Great Album Application</Text>
           </Appbar.Header>
         </Appbar>
         <AlbumContainer />
       </View>
     );
   }
+
+  /**
+   * Handle action button press
+   * Dispatch undefined album or photo to redux so the view will go back
+   */
   private handleGoBack = () => {
-    console.log(this.props)
     if (this.props.album && !this.props.photo) {
       this.props.dispatch(openAlbum(undefined));
     }
@@ -80,20 +84,13 @@ class RootContainer extends React.Component<RootProps, any> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#262626",
     paddingBottom: 100
   },
-  list: {
-    margin: 20
+  appbar: {
+    backgroundColor: "#050505"
   },
-  listItem: {
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 5,
-    marginTop: 5,
-    textAlign: "center"
-  },
-  welcome: {
+  header: {
     color: "white",
     fontSize: 20,
     textAlign: "center",
