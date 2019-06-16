@@ -80,11 +80,12 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     fontSize: 12,
-    height:25,
+    height:30,
     width: 150,
     textAlign: "center",
     color: "black",
-    fontFamily: "BebasNeue-Book"
+    fontFamily: "BebasNeue-Book",
+    padding: 3
   },
   albumList: {
     margin: 20
