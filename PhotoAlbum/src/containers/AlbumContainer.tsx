@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { Album, Photo } from "../types";
 import { connect, DispatchProp } from "react-redux";
 import { ActionState } from "../reducers/actions";
@@ -20,31 +20,36 @@ class AlbumContainer extends React.Component<AlbumProps> {
   }
 
   public render() {
-    if (!this.props.album) {
-      return (
-        <>
-          <Text style={styles.header}>Albums</Text>
-          <AlbumList
-            albums={this.props.albums}
-            dispatch={this.props.dispatch}
-          />
-        </>
-      );
-    } else if (this.props.album && !this.props.photo) {
-      return (
-        <>
-          <Text style={styles.header}>{this.props.album.title}</Text>
-
-          <PhotoList
-            photos={this.props.photos}
-            album={this.props.album}
-            dispatch={this.props.dispatch}
-          />
-        </>
-      );
-    } else if (this.props.photo) {
-      return <PhotoComponent photo={this.props.photo} />;
+    if(this.props.albums && this.props.photos){
+      if (!this.props.album ) {
+        return (
+          <>
+            <Text style={styles.header}>Albums</Text>
+            <AlbumList
+              photos={this.props.photos}
+              albums={this.props.albums}
+              dispatch={this.props.dispatch}
+            />
+          </>
+        );
+      } else if (this.props.album && !this.props.photo) {
+        return (
+          <>
+            <Text style={styles.header}>{this.props.album.title}</Text>
+            <PhotoList
+              photos={this.props.photos}
+              album={this.props.album}
+              dispatch={this.props.dispatch}
+            />
+          </>
+        );
+      } else if (this.props.photo) {
+        return <PhotoComponent photo={this.props.photo} />;
+      }
+    }else{
+      return <ActivityIndicator size="large"/>
     }
+
   }
 }
 const styles = StyleSheet.create({
