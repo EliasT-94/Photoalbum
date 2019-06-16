@@ -8,9 +8,8 @@ import {
   Animated
 } from "react-native";
 import { Album, Photo } from "../types";
-import { List } from "react-native-paper";
 import { setListBackground } from "./functions";
-import { openAlbum, openPhoto } from "../reducers/actions";
+import {  openPhoto } from "../reducers/actions";
 import { Dispatch } from "redux";
 import Image from "react-native-scalable-image";
 
@@ -26,7 +25,7 @@ export default class PhotoList extends React.Component<PhotoProps, PhotoState> {
   constructor(props: PhotoProps) {
     super(props);
     this.state = {
-      anim: new Animated.Value(800)
+      anim: new Animated.Value(1000)
     };
   }
   public componentDidMount() {
@@ -44,7 +43,7 @@ export default class PhotoList extends React.Component<PhotoProps, PhotoState> {
           numColumns={2}
           style={styles.photoList}
           renderItem={this.renderPhotoItem}
-          data={this.getPhotosFromAlbum(this.props.album.id)}
+          data={this.getPhotosFromAlbum(this.props.album.id, this.props.photos)}
           keyExtractor={item => {
             return item.id.toString();
           }}
@@ -56,8 +55,8 @@ export default class PhotoList extends React.Component<PhotoProps, PhotoState> {
    * Get all photos from a single album
    * @param {number} albumId
    */
-  private getPhotosFromAlbum = (albumId: number) => {
-    return this.props.photos.filter(photo => photo.albumId === albumId);
+  private getPhotosFromAlbum = (albumId: number, photos: Photo[]) => {
+    return photos.filter(photo => photo.albumId === albumId);
   };
 
   /**

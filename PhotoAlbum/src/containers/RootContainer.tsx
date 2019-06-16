@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { connect, DispatchProp } from "react-redux";
 import AlbumContainer from "./AlbumContainer";
 import { Album, Photo } from "../types";
@@ -29,9 +29,7 @@ class RootContainer extends React.Component<RootProps, any> {
   }
 
   public componentDidMount() {
-    console.log(this.props)
     if (!this.props.albums || !this.props.albums.length) {
-      console.log('NO AL BUMS')
       fetch("https://jsonplaceholder.typicode.com/albums")
         .then(response => response.json())
         .then((albums: Album[]) => {
@@ -61,10 +59,12 @@ class RootContainer extends React.Component<RootProps, any> {
             <Appbar.BackAction onPress={this.handleGoBack} />
           )) || <Appbar.Action icon={"perm-media"} />}
           <Appbar.Header style={styles.appbar}>
-            <Text style={styles.header}>The Great Album Application</Text>
+            <Text style={styles.header}>The Album Application</Text>
           </Appbar.Header>
         </Appbar>
-        <AlbumContainer />
+        {(this.props.albums.length && this.props.photos.length && (
+          <AlbumContainer />
+        )) || <ActivityIndicator size="large" />}
       </View>
     );
   }

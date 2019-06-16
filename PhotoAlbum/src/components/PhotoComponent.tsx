@@ -25,7 +25,7 @@ export default class PhotoComponent extends React.Component<
   public componentDidMount() {
     Animated.timing(this.state.fadeAnim, {
       toValue: 1,
-      duration: 500
+      duration: 600
     }).start();
   }
   public render() {

@@ -1,13 +1,22 @@
 import React from "react";
-import { FlatList, ListRenderItemInfo, StyleSheet, Text } from "react-native";
-import { Album } from "../types";
-import { List } from "react-native-paper";
-import { setListBackground } from "./functions";
+import {
+  FlatList,
+  ListRenderItemInfo,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity
+} from "react-native";
+import { Album, Photo } from "../types";
+import { setListBackground, getPhotosFromAlbum } from "./functions";
 import { openAlbum } from "../reducers/actions";
 import { Dispatch } from "redux";
+import Image from "react-native-scalable-image";
+import { ActivityIndicator } from "react-native";
 
 interface AlbumProps {
   albums: Album[];
+  photos: Photo[];
   dispatch: Dispatch;
 }
 export default class AlbumList extends React.Component<AlbumProps> {
@@ -34,20 +43,23 @@ export default class AlbumList extends React.Component<AlbumProps> {
    * @param {ListRenderItemInfo} info A single item to be rendered with index and separator (unused)
    */
   private renderAlbumItem = (info: ListRenderItemInfo<Album>) => {
-    return (
-      <List.Item
-        onPress={this.goToAlbum(info.item)}
-        left={props => (
-          <List.Icon
-            {...props}
-            icon="collections"
-            style={{ marginLeft: -8, marginRight: -8 }}
-          />
-        )}
-        title={<Text style={styles.listItemText}>{info.item.title}</Text>}
-        style={[styles.listItem, setListBackground(info.item.id)]}
-      />
-    );
+    const photos = getPhotosFromAlbum(info.item.id, this.props.photos);
+    if (photos && photos.length) {
+      return (
+        <View style={[styles.listItem, setListBackground(info.item.id)]}>
+          <TouchableOpacity onPress={this.goToAlbum(info.item)}>
+            <View style={styles.imageView}>
+              <Image width={55} source={{ uri: photos[0].thumbnailUrl }} />
+              <Image width={55} source={{ uri: photos[1].thumbnailUrl }} />
+              <Image width={55} source={{ uri: photos[2].thumbnailUrl }} />
+            </View>
+            <Text style={styles.listItemText}>{info.item.title}</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return <ActivityIndicator />;
+    }
   };
   /**
    * Dispatch info about an album to redux so it'll be opened
@@ -58,13 +70,20 @@ export default class AlbumList extends React.Component<AlbumProps> {
   };
 }
 const styles = StyleSheet.create({
+  imageView: {
+    flexDirection: "row"
+  },
   listItem: {
-    width: "45%",
     borderWidth: 1,
     borderColor: "#a6a9ad",
-    margin: 8
+    margin: 6
   },
   listItemText: {
+    fontSize: 12,
+    height:25,
+    width: 150,
+    textAlign: "center",
+    color: "black",
     fontFamily: "BebasNeue-Book"
   },
   albumList: {
